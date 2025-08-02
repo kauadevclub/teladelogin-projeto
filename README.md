@@ -2,7 +2,7 @@
 
 Este é um projeto de tela de login moderna e responsiva, desenvolvida com foco em usabilidade, design limpo e experiência do usuário.
 
-🔗 **Acesse o site:** [Clique aqui para ver a página ao vivo](https://seuusuario.github.io/teladelogin-projeto)
+🔗 **Acesse o site:** [https://kauadevclub.github.io/teladelogin-projeto/)
 
 ## 🚀 Funcionalidades
 
