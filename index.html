@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Modern Interface</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --bg-light: #f8fafc;
+            --bg-dark: #0f172a;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease;
+        }
+        
+        .form-container {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .form-container:hover {
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.15);
+        }
+        
+        .input-field {
+            transition: all 0.2s ease;
+        }
+        
+        .input-field:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
+        .btn-google {
+            transition: all 0.2s ease;
+        }
+        
+        .btn-google:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .toggle-form {
+            display: none;
+        }
+        
+        .toggle-form.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .dark {
+            background-color: var(--bg-dark);
+            color: white;
+        }
+        
+        .dark .form-container {
+            background-color: #1e293b;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .dark .input-field {
+            background-color: #334155;
+            border-color: #475569;
+            color: white;
+        }
+        
+        .dark .text-primary {
+            color: white;
+        }
+        
+        .dark .text-secondary {
+            color: #94a3b8;
+        }
+        
+        .separator {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+        
+        .separator::before, .separator::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .separator::before {
+            margin-right: 1rem;
+        }
+        
+        .separator::after {
+            margin-left: 1rem;
+        }
+        
+        .dark .separator::before, .dark .separator::after {
+            border-bottom-color: #334155;
+        }
+        
+        .password-toggle {
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+        
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-slate-900 transition-colors duration-300">
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="w-full max-w-md">
+            <!-- Theme Toggle -->
+            <div class="flex justify-end mb-4">
+                <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-200">
+                    <i id="theme-icon" class="fas fa-moon"></i>
+                </button>
+            </div>
+            
+            <!-- Logo -->
+            <div class="flex justify-center mb-8">
+                <div class="w-16 h-16 rounded-xl bg-indigo-500 flex items-center justify-center text-white text-2xl font-bold">
+                    <i class="fas fa-rocket"></i>
+                </div>
+            </div>
+            
+            <!-- Form Container -->
+            <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 form-container">
+                <!-- Login Form -->
+                <div id="login-form" class="toggle-form active">
+                    <h1 class="text-2xl font-bold text-center text-primary dark:text-white mb-6">Bem-vindo de volta</h1>
+                    
+                    <form id="login">
+                        <div class="mb-4">
+                            <label for="login-email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">E-mail</label>
+                            <div class="relative">
+                                <input type="email" id="login-email" class="w-full px-4 py-3 rounded-lg input-field border border-gray-300 dark:border-gray-600 focus:outline-none" placeholder="seu@email.com" required>
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                    <i class="fas fa-envelope text-gray-400"></i>
+                                </div>
+                            </div>
+                            <div id="login-email-error" class="error-message"></div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="login-password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Senha</label>
+                            <div class="relative">
+                                <input type="password" id="login-password" class="w-full px-4 py-3 rounded-lg input-field border border-gray-300 dark:border-gray-600 focus:outline-none" placeholder="••••••••" required>
+                                <div id="login-password-toggle" class="password-toggle">
+                                    <i class="fas fa-eye-slash text-gray-400"></i>
+                                </div>
+                            </div>
+                            <div id="login-password-error" class="error-message"></div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center">
+                                <input id="remember-me" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                <label for="remember-me" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">Lembrar-me</label>
+                            </div>
+                            <a href="#" class="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500">Esqueceu sua senha?</a>
+                        </div>
+                        
+                        <button type="submit" class="w-full btn-primary text-white py-3 px-4 rounded-lg font-medium">
+                            Entrar
+                        </button>
+                    </form>
+                    
+                    <div class="separator my-6">ou</div>
+                    
+                    <button class="w-full btn-google border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 py-3 px-4 rounded-lg font-medium mb-6 flex items-center justify-center">
+                        <i class="fab fa-google text-red-500 mr-2"></i> Continuar com Google
+                    </button>
+                    
+                    <div class="text-center text-sm text-gray-600 dark:text-gray-400">
+                        Não tem uma conta? 
+                        <button id="show-register" class="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500">Cadastre-se</button>
+                    </div>
+                </div>
+                
+                <!-- Register Form -->
+                <div id="register-form" class="toggle-form">
+                    <h1 class="text-2xl font-bold text-center text-primary dark:text-white mb-6">Crie sua conta</h1>
+                    
+                    <form id="register">
+                        <div class="mb-4">
+                            <label for="register-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nome completo</label>
+                            <div class="relative">
+                                <input type="text" id="register-name" class="w-full px-4 py-3 rounded-lg input-field border border-gray-300 dark:border-gray-600 focus:outline-none" placeholder="Seu nome" required>
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                    <i class="fas fa-user text-gray-400"></i>
+                                </div>
+                            </div>
+                            <div id="register-name-error" class="error-message"></div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="register-email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">E-mail</label>
+                            <div class="relative">
+                                <input type="email" id="register-email" class="w-full px-4 py-3 rounded-lg input-field border border-gray-300 dark:border-gray-600 focus:outline-none" placeholder="seu@email.com" required>
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                    <i class="fas fa-envelope text-gray-400"></i>
+                                </div>
+                            </div>
+                            <div id="register-email-error" class="error-message"></div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="register-password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Senha</label>
+                            <div class="relative">
+                                <input type="password" id="register-password" class="w-full px-4 py-3 rounded-lg input-field border border-gray-300 dark:border-gray-600 focus:outline-none" placeholder="••••••••" required>
+                                <div id="register-password-toggle" class="password-toggle">
+                                    <i class="fas fa-eye-slash text-gray-400"></i>
+                                </div>
+                            </div>
+                            <div id="register-password-error" class="error-message"></div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label for="register-confirm-password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Confirmar senha</label>
+                            <div class="relative">
+                                <input type="password" id="register-confirm-password" class="w-full px-4 py-3 rounded-lg input-field border border-gray-300 dark:border-gray-600 focus:outline-none" placeholder="••••••••" required>
+                                <div id="register-confirm-password-toggle" class="password-toggle">
+                                    <i class="fas fa-eye-slash text-gray-400"></i>
+                                </div>
+                            </div>
+                            <div id="register-confirm-password-error" class="error-message"></div>
+                        </div>
+                        
+                        <button type="submit" class="w-full btn-primary text-white py-3 px-4 rounded-lg font-medium mb-4">
+                            Cadastrar
+                        </button>
+                        
+                        <div class="text-center text-sm text-gray-600 dark:text-gray-400">
+                            Já tem uma conta? 
+                            <button id="show-login" class="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500">Faça login</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="mt-6 text-center text-xs text-gray-500 dark:text-gray-400">
+                © 2023 Modern Interface. Todos os direitos reservados.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle between login and register forms
+        document.getElementById('show-register').addEventListener('click', function() {
+            document.getElementById('login-form').classList.remove('active');
+            document.getElementById('register-form').classList.add('active');
+        });
+        
+        document.getElementById('show-login').addEventListener('click', function() {
+            document.getElementById('register-form').classList.remove('active');
+            document.getElementById('login-form').classList.add('active');
+        });
+        
+        // Password toggle functionality
+        function setupPasswordToggle(inputId, toggleId) {
+            const passwordInput = document.getElementById(inputId);
+            const toggle = document.getElementById(toggleId);
+            
+            toggle.addEventListener('click', function() {
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    toggle.innerHTML = '<i class="fas fa-eye text-gray-400"></i>';
+                } else {
+                    passwordInput.type = 'password';
+                    toggle.innerHTML = '<i class="fas fa-eye-slash text-gray-400"></i>';
+                }
+            });
+        }
+        
+        setupPasswordToggle('login-password', 'login-password-toggle');
+        setupPasswordToggle('register-password', 'register-password-toggle');
+        setupPasswordToggle('register-confirm-password', 'register-confirm-password-toggle');
+        
+        // Theme toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const html = document.documentElement;
+        
+        // Check for saved theme preference or use system preference
+        if (localStorage.getItem('theme') === 'dark' || 
+            (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+            themeIcon.classList.replace('fa-moon', 'fa-sun');
+        } else {
+            html.classList.remove('dark');
+            themeIcon.classList.replace('fa-sun', 'fa-moon');
+        }
+        
+        themeToggle.addEventListener('click', function() {
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                themeIcon.classList.replace('fa-sun', 'fa-moon');
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.classList.add('dark');
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+        
+        // Form validation
+        document.getElementById('login').addEventListener('submit', function(e) {
+            e.preventDefault();
+            let isValid = true;
+            
+            const email = document.getElementById('login-email');
+            const password = document.getElementById('login-password');
+            const emailError = document.getElementById('login-email-error');
+            const passwordError = document.getElementById('login-password-error');
+            
+            // Reset errors
+            emailError.textContent = '';
+            passwordError.textContent = '';
+            
+            // Email validation
+            if (!email.value) {
+                emailError.textContent = 'Por favor, insira seu e-mail';
+                isValid = false;
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+                emailError.textContent = 'Por favor, insira um e-mail válido';
+                isValid = false;
+            }
+            
+            // Password validation
+            if (!password.value) {
+                passwordError.textContent = 'Por favor, insira sua senha';
+                isValid = false;
+            } else if (password.value.length < 8) {
+                passwordError.textContent = 'A senha deve ter pelo menos 8 caracteres';
+                isValid = false;
+            }
+            
+            if (isValid) {
+                // Simulate form submission
+                const submitBtn = this.querySelector('button[type="submit"]');
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Entrando...';
+                submitBtn.disabled = true;
+                
+                setTimeout(() => {
+                    submitBtn.innerHTML = 'Entrar';
+                    submitBtn.disabled = false;
+                    alert('Login realizado com sucesso! (simulação)');
+                }, 1500);
+            }
+        });
+        
+        document.getElementById('register').addEventListener('submit', function(e) {
+            e.preventDefault();
+            let isValid = true;
+            
+            const name = document.getElementById('register-name');
+            const email = document.getElementById('register-email');
+            const password = document.getElementById('register-password');
+            const confirmPassword = document.getElementById('register-confirm-password');
+            const nameError = document.getElementById('register-name-error');
+            const emailError = document.getElementById('register-email-error');
+            const passwordError = document.getElementById('register-password-error');
+            const confirmPasswordError = document.getElementById('register-confirm-password-error');
+            
+            // Reset errors
+            nameError.textContent = '';
+            emailError.textContent = '';
+            passwordError.textContent = '';
+            confirmPasswordError.textContent = '';
+            
+            // Name validation
+            if (!name.value) {
+                nameError.textContent = 'Por favor, insira seu nome';
+                isValid = false;
+            }
+            
+            // Email validation
+            if (!email.value) {
+                emailError.textContent = 'Por favor, insira seu e-mail';
+                isValid = false;
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+                emailError.textContent = 'Por favor, insira um e-mail válido';
+                isValid = false;
+            }
+            
+            // Password validation
+            if (!password.value) {
+                passwordError.textContent = 'Por favor, insira uma senha';
+                isValid = false;
+            } else if (password.value.length < 8) {
+                passwordError.textContent = 'A senha deve ter pelo menos 8 caracteres';
+                isValid = false;
+            }
+            
+            // Confirm password validation
+            if (!confirmPassword.value) {
+                confirmPasswordError.textContent = 'Por favor, confirme sua senha';
+                isValid = false;
+            } else if (password.value !== confirmPassword.value) {
+                confirmPasswordError.textContent = 'As senhas não coincidem';
+                isValid = false;
+            }
+            
+            if (isValid) {
+                // Simulate form submission
+                const submitBtn = this.querySelector('button[type="submit"]');
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Cadastrando...';
+                submitBtn.disabled = true;
+                
+                setTimeout(() => {
+                    submitBtn.innerHTML = 'Cadastrar';
+                    submitBtn.disabled = false;
+                    alert('Cadastro realizado com sucesso! (simulação)');
+                    
+                    // Switch to login form after successful registration
+                    document.getElementById('register-form').classList.remove('active');
+                    document.getElementById('login-form').classList.add('active');
+                    
+                    // Pre-fill email in login form
+                    document.getElementById('login-email').value = email.value;
+                }, 1500);
+            }
+        });
+    </script>
+</body>
+</html>
